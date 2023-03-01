@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a simple repository to setup an Airbyte Api connection that is orchestrated by Airflow.
+This is a guide to setup an Airbyte Api connection that is orchestrated by Airflow.
 
 - Airflow orchestration Dag example
 
