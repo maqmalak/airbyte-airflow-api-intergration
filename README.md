@@ -99,7 +99,7 @@ This is a guide to setup an Airbyte Api connection that is orchestrated by Airfl
 
 ### Step 6:
 
-- Access Airbyte at http://localhost:8080 & enter the credentials
+- Access Airflow at http://localhost:8080 & enter the credentials
 
   - USERNAME=airflow
 
