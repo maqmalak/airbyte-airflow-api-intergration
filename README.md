@@ -189,7 +189,7 @@ This is a guide to setup an Airbyte Api connection that is orchestrated by Airfl
 
 - Flower --> Celery Monitoring Tool (runs on port 5555)
 
----
+<!---
 
 ## Resources
 
@@ -202,3 +202,5 @@ https://github.com/airbytehq/airbyte/tree/master/resources/examples/airflow
 https://docs.airbyte.com/operator-guides/using-the-airflow-airbyte-operator/
 
 https://airbyte.com/tutorials/data-scraping-with-airflow-and-beautiful-soup
+
+-->
