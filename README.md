@@ -49,6 +49,18 @@ This is a guide to setup an Airbyte Api connection that is orchestrated by Airfl
   bash install.sh
   ```
 
+- (Alternative) For a complete clean installation, use:
+
+  ```bash
+  bash clean_install.sh
+  ```
+  
+  or
+  
+  ```bash
+  make clean-install
+  ```
+
 - Build airflow image
 
   ```bash
@@ -126,6 +138,18 @@ This is a guide to setup an Airbyte Api connection that is orchestrated by Airfl
 ---
 
 ## Commands
+
+- Clean Install (new recommended approach)
+
+  ```bash
+  bash clean_install.sh
+  ```
+  
+  or
+  
+  ```bash
+  make clean-install
+  ```
 
 - Stop then start Airflow/Airbyte stack again
 

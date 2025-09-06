@@ -1,3 +1,27 @@
-apache-airflow-providers-http
-apache-airflow-providers-airbyte
-bs4
+dask
+duckdb
+distributed
+redis
+# boto3
+psycopg2-binary
+# apache-airflow-providers-amazon[s3fs]
+# s3fs
+# sqlalchemy-redshift
+apache-airflow-providers-redis
+apache-airflow-providers-common-sql
+apache-airflow-providers-microsoft-mssql
+apache-airflow-providers-postgres
+apache-airflow-providers-mysql
+asyncpg
+faker
+pyodbc
+pandas
+pendulum
+sqlalchemy
+cx-Oracle==8.3.0
+# pymssql==2.3.1
+# PyMySQL==1.0.2
+mysql-connector-python==8.1.0
+# Additional dependencies for Spark integration
+pyspark==3.5.0
+py4j

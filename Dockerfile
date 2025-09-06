@@ -1,14 +1,76 @@
-FROM apache/airflow:2.5.1
+FROM apache/airflow:2.11.0
 
-ARG AIRFLOW_USER_HOME=/opt/airflow
+# Accept host UID and GID
+ARG HOST_UID=50000
+ARG HOST_GID=50000
 
-ENV PYTHONPATH=$PYTHONPATH:${AIRFLOW_USER_HOME}
+USER root
+
+# Install required packages including FreeTDS and dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        curl \
+        unixodbc \
+        unixodbc-dev \
+        libodbc1 \
+        odbcinst \
+        iproute2 \
+        net-tools \
+        odbcinst1debian2 \
+        freetds-bin \
+        freetds-common \
+        freetds-dev \
+        libsybdb5 \
+        libct4 \
+        openjdk-17-jre \
+        tdsodbc && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Download and install Microsoft ODBC Driver 17 for SQL Server directly
+#RUN curl -sSL https://packages.microsoft.com/debian/12/prod/pool/main/m/msodbcsql17/msodbcsql17_17.10.5.1-1_amd64.deb -o msodbcsql17.deb && \
+#   ACCEPT_EULA=Y dpkg -i msodbcsql17.deb && \
+#   rm msodbcsql17.deb
+
+# Install system build dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends build-essential && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Configure ODBC for FreeTDS
+RUN echo "[FreeTDS]\nDescription=FreeTDS Driver\nDriver=/usr/lib/x86_64-linux-gnu/odbc/libtdsodbc.so\nSetup=/usr/lib/x86_64-linux-gnu/odbc/libtdsS.so\nUsageCount=1" >> /etc/odbcinst.ini
+
+# Configure FreeTDS
+RUN echo "[global]\nTDS_Version = 7.0\nclient charset = UTF-8" > /etc/freetds/freetds.conf
+
+# Ensure group exists (create only if missing)
+# Special handling for GID 0 (root group) to avoid conflicts
+RUN if [ \"${HOST_GID}\" = \"0\" ]; then \
+        getent group airflow || groupadd -g 1000 airflow; \
+    else \
+        getent group airflow || groupadd -g ${HOST_GID} airflow; \
+    fi
+
+# Ensure user exists (create only if missing)
+RUN id -u airflow >/dev/null 2>&1 || \
+    useradd -u ${HOST_UID} -g airflow -m airflow
+
+# If user already exists, adjust UID/GID only if needed
+# Special handling for GID 0 (root group)
+RUN CURRENT_UID=$(id -u airflow) && \
+    CURRENT_GID=$(id -g airflow) && \
+    if [ \"$CURRENT_UID\" != \"$HOST_UID\" ]; then usermod -u ${HOST_UID} airflow; fi && \
+    if [ \"$HOST_GID\" = \"0\" ] && [ \"$CURRENT_GID\" != \"1000\" ]; then \
+        groupmod -g 1000 airflow; \
+    elif [ \"$CURRENT_GID\" != \"$HOST_GID\" ]; then \
+        groupmod -g ${HOST_GID} airflow; \
+    fi
 
 USER airflow
 
-RUN pip3 install --upgrade pip && \
-    pip3 install bs4 && \
-    pip3 install apache-airflow-providers-http && \
-    pip3 install apache-airflow-providers-airbyte
+# Copy and install Python dependencies
+COPY requirements.txt /opt/airflow/
+ENV PYTHONPATH=/opt/airflow/scripts:$PYTHONPATH
 
-RUN mkdir ${AIRFLOW_USER_HOME}/outputs
+# Upgrade pip and install dependencies with retry options
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir --timeout 1000 --retries 10 -r /opt/airflow/requirements.txt

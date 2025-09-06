@@ -20,6 +20,10 @@ restart-airflow-airbyte-stack:
 purge-then-clean-install:
 	docker-compose -f docker-compose.airflow.yaml -f docker-compose.airbyte.yaml down && docker system prune -a && docker build -f Dockerfile -t docker_airflow . && docker-compose -f docker-compose.airflow.yaml -f docker-compose.airbyte.yaml up
 
+# clean installation of the entire stack
+clean-install:
+	./clean_install.sh
+
 ## Airbyte credentials
 #BASIC_AUTH_USERNAME=airbyte
 #BASIC_AUTH_PASSWORD=password
