@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "Access Airbyte at http://localhost:8000 and set up a connection Then copy the connection id from the connection page url."
+echo "Access Airbyte at http://localhost:8008 and set up a connection Then copy the connection id from the connection page url."
 echo "Enter your Airbyte connection ID: "
 read connection_id
 echo "---------Setting connection ID for DAG job---------"
