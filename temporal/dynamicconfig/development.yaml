@@ -1,0 +1,30 @@
+system.forceSearchAttributesCacheRefreshOnRead:
+  - value: true
+    constraints: {}
+limit.historyCount.suggestContinueAsNew:
+  - value: 8000
+    constraints: {}
+limit.historyCount.errorOnInvalidContinueAsNew:
+  - value: true
+    constraints: {}
+limit.historyCount.failWorkflowOnExceed:
+  - value: 7000
+    constraints: {}
+limit.blobSize.error:
+  - value: 3145728
+    constraints: {}
+limit.blobSize.warn:
+  - value: 2097152
+    constraints: {}
+limit.mutableStateSize.error:
+  - value: 1048576
+    constraints: {}
+limit.mutableStateSize.warn:
+  - value: 524288
+    constraints: {}
+limit.historySize.error:
+  - value: 1048576
+    constraints: {}
+limit.historySize.warn:
+  - value: 524288
+    constraints: {}
